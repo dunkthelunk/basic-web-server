@@ -14,7 +14,7 @@ int main() {
   struct addrinfo hints, *res;
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;
-  hints.ai_family = AF_INET;
+ // hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
   getaddrinfo(NULL, PORT, &hints, &res);
@@ -35,8 +35,9 @@ int main() {
   struct sockaddr_storage their_addr;
   socklen_t addr_size;
   listen(socket_fd, BACKLOG);
-  char *msg1= "Jeez was here once!";
-  char *msg2= "Jeez was here twice!";
+  char *msg1= "Jeez was here once!\n";
+  char *msg2= "Jeez was here twice!\n";
+  char *msg3= "HTTP/1.1 200 OK\n\nHello, World!\n";
   int bytes_sent;
   char recvbuf[1000];
   while(1) {
@@ -48,6 +49,8 @@ int main() {
       bytes_sent = send(newfd, msg1, strlen(msg1), 0); 
     } else if(recvbuf[0] == '2') {
       bytes_sent = send(newfd, msg2, strlen(msg2), 0); 
+    } else {
+      bytes_sent = send(newfd, msg3, strlen(msg3), 0); 
     }
     close(newfd);
     printf("closed %i\n", newfd);
